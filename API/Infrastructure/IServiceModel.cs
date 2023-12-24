@@ -1,4 +1,6 @@
-﻿namespace API.Infrastructure
+﻿using API.ModelBooks;
+
+namespace API.Infrastructure
 {
     public interface IServiceModel<T>
     {
@@ -6,5 +8,6 @@
         T Upd<C>(C Id, T Enty);
         T Add(T Enty);
         T get<C>(C Id);
+        /*Book? Upd(Book book);*/
     }
 }
