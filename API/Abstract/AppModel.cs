@@ -5,7 +5,7 @@ namespace API.Abstract
 {
     public abstract class AppModel : DbContext
     {
-        public AppModel(DbContextOptions<AppModel> options) : base(options)
+        public AppModel(DbContextOptions options) : base(options)
         {
 
         }

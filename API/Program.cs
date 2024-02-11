@@ -1,3 +1,7 @@
+using API.Abstract;
+using API.ServiceBook;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -8,6 +12,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
+
+
+/*builder.Services.AddDbContext<DbContextBook>(options => options.UseSqlite(connection));*/
+
+
+builder.Services.AddDbContext<DbContextBook>(options=>options.UseSqlite(connection));
+builder.Services.AddMyService();
 
 var app = builder.Build();
 

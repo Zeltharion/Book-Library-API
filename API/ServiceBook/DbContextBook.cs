@@ -1,6 +1,8 @@
 ﻿using API.Abstract;
 using API.ViewsBook;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System.Reflection;
 
 namespace API.ServiceBook
 {
@@ -8,14 +10,17 @@ namespace API.ServiceBook
     {
         public DbSet<ViewBook> Books { get; set; }
 
-        public DbContextBook(DbContextOptions<AppModel> options) : base(options)
+        public DbContextBook(DbContextOptions options) : base(options)
         {
-
+            Books = Set<ViewBook>();
+            Database.Migrate();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            modelBuilder.Entity<ViewBook>().Property(u => u.Id).ValueGeneratedOnAdd();
         }
     }
 }

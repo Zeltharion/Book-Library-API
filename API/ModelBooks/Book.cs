@@ -1,12 +1,15 @@
-﻿
-
-using API.Infrastructure;
+﻿using API.Infrastructure;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.ModelBooks
 {
-    public class Book
+    [PrimaryKey(nameof(Id))]
+    public class Book:IUpdate<Book>
     {
-        public Guid Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid? Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string Author { get; set; }
@@ -24,6 +27,15 @@ namespace API.ModelBooks
             Genre = e.Genre;
             TakenStatus = e.TakenStatus;
             Condition = e.Condition;
+        }
+
+        Book IUpdate<Book>.Update(Book? book)
+        {
+            if (book is not null)
+            {
+                Update(book);
+            }
+            return this;
         }
     }
 }
