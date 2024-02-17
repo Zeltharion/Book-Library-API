@@ -27,7 +27,7 @@ public class BookController : ControllerBase
     }
 
     [HttpGet("{Id}")]
-    public async Task<ActionResult<ViewBook>> GetBook([FromQuery] Guid Id)
+    public async Task<ActionResult<ViewBook>> GetBook([FromRoute] Guid Id)
     {
         if (Id != Guid.Empty)
         {
@@ -37,27 +37,69 @@ public class BookController : ControllerBase
         return BadRequest(nameof(Id));
     }
 
-    [HttpPost]
+    /*[HttpPost]
     public async Task<ActionResult<ViewBook>> AddBook([FromBody] ViewBook viewbook)
     {
         if (viewbook.Id != Guid.Empty)
         {
-            var post = _context.Books.Add(viewbook);
+            var post = _context.Books.AddAsync(viewbook);
             await _context.SaveChangesAsync();
             return CreatedAtAction("GetBook", viewbook);
         }
         return BadRequest();
+    }*/
+
+    [HttpPost]
+    public async Task<ActionResult<ViewBook>> AddBook([FromBody] ViewBook viewbook)
+    {
+        if (viewbook.Id == Guid.Empty)
+        {
+            return BadRequest("Invalid Id");
+        }
+
+        var post = await _context.Books.AddAsync(viewbook);
+        await _context.SaveChangesAsync();
+
+        return CreatedAtAction("GetBook", new { Id = viewbook.Id }, viewbook);
     }
 
+    /* [HttpPost("{Id}")]
+     public async Task<ActionResult<ViewBook>> AddBookId([FromQuery] Guid Id, [FromBody] ViewBook viewBook)
+     {
+         if (Id != Guid.Empty)
+         {
+             var book = await _context.Books.FindAsync(Id);
+             *//*_context.Books.Update(book);*//*
+             await _context.SaveChangesAsync();
+             return Ok(book);
+         }
+         return BadRequest(nameof(Id));
+     }*/
+
     [HttpPost("{Id}")]
-    public async Task<ActionResult<ViewBook>> AddBookId([FromQuery] Guid Id, [FromBody] ViewBook viewBook)
+    public async Task<ActionResult<ViewBook>> AddBookId([FromRoute] Guid Id, [FromBody] ViewBook viewBook)
     {
-        if (Id != Guid.Empty)
+        if (Id == Guid.Empty)
         {
-            var book = await _context.Books.FindAsync(Id);
-            _context.Books.Update(book);
-            await _context.SaveChangesAsync();
+            return BadRequest("Invalid Id");
         }
-        return BadRequest(nameof(Id));
+
+        // обновление данных существующей книги
+        var book = await _context.Books.FindAsync(Id);
+        if (book == null)
+        {
+            return NotFound();
+        }
+
+        // обновление свойств книги
+        book.Title = viewBook.Title;
+        book.Author = viewBook.Author;
+        _context.Books.Update(book);
+
+        await _context.SaveChangesAsync();
+
+        return CreatedAtAction("GetBook", new { Id = viewBook.Id }, viewBook);
     }
+
+
 }

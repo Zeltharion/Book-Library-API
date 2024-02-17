@@ -18,7 +18,6 @@ namespace API.ServiceBook
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             modelBuilder.Entity<ViewBook>().Property(u => u.Id).ValueGeneratedOnAdd();
         }
