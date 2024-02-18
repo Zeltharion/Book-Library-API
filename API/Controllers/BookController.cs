@@ -81,21 +81,18 @@ public class BookController : ControllerBase
     {
         if (Id == Guid.Empty)
         {
-            return BadRequest("Invalid Id");
+            return BadRequest(nameof(Id));
         }
 
-        // обновление данных существующей книги
         var book = await _context.Books.FindAsync(Id);
         if (book == null)
         {
             return NotFound();
         }
 
-        // обновление свойств книги
-        book.Title = viewBook.Title;
-        book.Author = viewBook.Author;
+        /*book.Title = viewBook.Title;
+        book.Author = viewBook.Author;*/
         _context.Books.Update(book);
-
         await _context.SaveChangesAsync();
 
         return CreatedAtAction("GetBook", new { Id = viewBook.Id }, viewBook);
