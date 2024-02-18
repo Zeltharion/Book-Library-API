@@ -16,7 +16,7 @@ public class BookController : ControllerBase
         _context = context;
     }
 
-    [HttpGet]
+    [HttpGet("GET/")]
     public async Task<ActionResult<ViewBook>> GetAllBooks()
     {
         var allBooks = await _context.Books.ToListAsync();
@@ -26,7 +26,7 @@ public class BookController : ControllerBase
         return Ok(allBooks);
     }
 
-    [HttpGet("{Id}")]
+    [HttpGet("GET/{Id}")]
     public async Task<ActionResult<ViewBook>> GetBook([FromRoute] Guid Id)
     {
         if (Id != Guid.Empty)
@@ -49,7 +49,7 @@ public class BookController : ControllerBase
         return BadRequest();
     }*/
 
-    [HttpPost]
+    [HttpPost("POST/")]
     public async Task<ActionResult<ViewBook>> AddBook([FromBody] ViewBook viewbook)
     {
         if (viewbook.Id == Guid.Empty)
@@ -76,7 +76,7 @@ public class BookController : ControllerBase
          return BadRequest(nameof(Id));
      }*/
 
-    [HttpPost("{Id}")]
+    [HttpPost("POST/{Id}")]
     public async Task<ActionResult<ViewBook>> AddBookId([FromRoute] Guid Id, [FromBody] ViewBook viewBook)
     {
         if (Id == Guid.Empty)
