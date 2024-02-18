@@ -10,5 +10,5 @@
 - Занята или нет книга в библиотеке: bool TakenStatus
 - Физическое состояние книги (0 - плохое, 1 - хорошее): bool Condition
 
-## Запросы: GET, POST, POST{ID}, GET{ID}
+## Запросы: GET, GET{ID}, GET{Random}, POST, POST{ID}
 ### Db: SQLITE
