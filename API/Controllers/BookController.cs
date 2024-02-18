@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using API.ServiceBook;
 using API.ViewsBook;
+using API.ModelBooks;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -26,6 +27,15 @@ public class BookController : ControllerBase
         return Ok(allBooks);
     }
 
+    [HttpGet("Random/")]
+    public async Task<ActionResult<ViewBook>> GenerateRandomBook()
+    {
+        Book randomBook = RandomBookGenerator.GenerateRandomBook();
+        if (randomBook == null)
+            return NotFound();
+        return Ok(randomBook);
+    }
+
     [HttpGet("GET/{Id}")]
     public async Task<ActionResult<ViewBook>> GetBook([FromRoute] Guid Id)
     {
@@ -36,18 +46,6 @@ public class BookController : ControllerBase
         }
         return BadRequest(nameof(Id));
     }
-
-    /*[HttpPost]
-    public async Task<ActionResult<ViewBook>> AddBook([FromBody] ViewBook viewbook)
-    {
-        if (viewbook.Id != Guid.Empty)
-        {
-            var post = _context.Books.AddAsync(viewbook);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction("GetBook", viewbook);
-        }
-        return BadRequest();
-    }*/
 
     [HttpPost("POST/")]
     public async Task<ActionResult<ViewBook>> AddBook([FromBody] ViewBook viewbook)
@@ -63,19 +61,6 @@ public class BookController : ControllerBase
         return CreatedAtAction("GetBook", new { Id = viewbook.Id }, viewbook);
     }
 
-    /* [HttpPost("{Id}")]
-     public async Task<ActionResult<ViewBook>> AddBookId([FromQuery] Guid Id, [FromBody] ViewBook viewBook)
-     {
-         if (Id != Guid.Empty)
-         {
-             var book = await _context.Books.FindAsync(Id);
-             *//*_context.Books.Update(book);*//*
-             await _context.SaveChangesAsync();
-             return Ok(book);
-         }
-         return BadRequest(nameof(Id));
-     }*/
-
     [HttpPost("POST/{Id}")]
     public async Task<ActionResult<ViewBook>> AddBookId([FromRoute] Guid Id, [FromBody] ViewBook viewBook)
     {
@@ -90,13 +75,9 @@ public class BookController : ControllerBase
             return NotFound();
         }
 
-        /*book.Title = viewBook.Title;
-        book.Author = viewBook.Author;*/
         _context.Books.Update(book);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction("GetBook", new { Id = viewBook.Id }, viewBook);
     }
-
-
 }
